@@ -76,8 +76,8 @@ router.post('/login', async (req, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
     }
 
     const user = await prisma.user.findUnique({
@@ -87,6 +87,19 @@ router.post('/login', async (req, res: Response) => {
 
     if (!user || !user.isActive) {
       return res.status(401).json({ error: 'Invalid credentials or inactive account' });
+    }
+
+    // Prompt first-time password setup if no password has been configured yet
+    if (!user.passwordHash) {
+      return res.status(200).json({
+        requiresPasswordSetup: true,
+        email: user.email,
+        name: user.name,
+      });
+    }
+
+    if (!password) {
+      return res.status(400).json({ error: 'Password is required' });
     }
 
     const isValid = await bcrypt.compare(password, user.passwordHash);
@@ -120,6 +133,64 @@ router.post('/login', async (req, res: Response) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// Self-service password setup for newly onboarded cleaners
+router.post('/setup-password', async (req, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password || password.length < 4) {
+      return res.status(400).json({ error: 'Email and a password (min 4 characters) are required' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { organization: true },
+    });
+
+    if (!user || !user.isActive) {
+      return res.status(404).json({ error: 'Account not found or inactive' });
+    }
+
+    if (user.passwordHash) {
+      return res.status(400).json({ error: 'Password is already set. Please sign in normally.' });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    });
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        role: user.role,
+        organizationId: user.organizationId,
+      },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        commissionRate: user.commissionRate,
+        organizationId: user.organizationId,
+        organizationName: user.organization.name,
+        currency: user.organization.currency,
+      },
+    });
+  } catch (error) {
+    console.error('Setup password error:', error);
+    res.status(500).json({ error: 'Failed to set password' });
   }
 });
 

@@ -17,7 +17,7 @@ model Booking {
   customer       Customer      @relation(fields: [customerId], references: [id])
 
   cleanerId      String?
-  cleaner        User?         @relation("CleanerBookings", fields: [cleanerId], references: [id])
+  cleaner        User?         @relation("CleanerBookings", fields: [cleanerId], references: [id], onDelete: SetNull)
 
   serviceTypeId  String
   serviceType    ServiceType   @relation(fields: [serviceTypeId], references: [id])
