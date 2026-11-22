@@ -1,0 +1,43 @@
+model Organization {
+  id             String   @id @default(cuid())
+  name           String
+  currency       String   @default("USD")
+  createdAt      DateTime @default(now())
+
+  users          User[]
+  customers      Customer[]
+  serviceTypes   ServiceType[]
+  addonServices  AddonService[]
+  bookings       Booking[]
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String
+  passwordHash   String
+  role           Role     @default(CLEANER)
+  commissionRate Float    @default(0.5) // 50% от заказа клинеру
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  assignedBookings Booking[] @relation("CleanerBookings")
+}
+
+model Customer {
+  id             String   @id @default(cuid())
+  name           String
+  phone          String
+  email          String?
+  address        String
+  accessNotes    String?  // Например: "Код домофона 45К, есть собака"
+  createdAt      DateTime @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  bookings       Booking[]
+}

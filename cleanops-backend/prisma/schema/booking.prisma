@@ -1,0 +1,45 @@
+model Booking {
+  id             String        @id @default(cuid())
+  scheduledStart DateTime
+  scheduledEnd   DateTime
+  areaSqm        Int
+  totalPrice     Float
+  cleanerPayout  Float         @default(0)
+  status         BookingStatus @default(NEW)
+  paymentStatus  PaymentStatus @default(UNPAID)
+  notes          String?
+  createdAt      DateTime      @default(now())
+
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  customerId     String
+  customer       Customer      @relation(fields: [customerId], references: [id])
+
+  cleanerId      String?
+  cleaner        User?         @relation("CleanerBookings", fields: [cleanerId], references: [id])
+
+  serviceTypeId  String
+  serviceType    ServiceType   @relation(fields: [serviceTypeId], references: [id])
+
+  addons         BookingAddon[]
+  checklist      BookingChecklistItem[]
+}
+
+model BookingAddon {
+  id             String       @id @default(cuid())
+  bookingId      String
+  booking        Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  addonServiceId String
+  addonService   AddonService @relation(fields: [addonServiceId], references: [id])
+  priceAtBooking Float
+}
+
+model BookingChecklistItem {
+  id          String  @id @default(cuid())
+  title       String
+  isCompleted Boolean @default(false)
+
+  bookingId   String
+  booking     Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,25 @@
+model ServiceType {
+  id               String   @id @default(cuid())
+  name             String   // Standard, Deep Clean, Post-Construction
+  basePrice        Float    // Базовая цена выезда
+  pricePerSqm      Float    // Цена за 1 м²
+  estimatedMinutes Int      @default(120)
+  defaultChecklist String[] // Массив стандартных пунктов чек-листа
+
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  bookings         Booking[]
+}
+
+model AddonService {
+  id             String   @id @default(cuid())
+  name           String   // Мытье окон, духовка, холодильник
+  price          Float
+  extraMinutes   Int      @default(30)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  bookings       BookingAddon[]
+}
