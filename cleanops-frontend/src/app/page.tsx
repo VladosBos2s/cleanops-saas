@@ -259,12 +259,12 @@ export default function PublicStorefrontPage() {
             {services.map((service, index) => {
               const isFeatured = index === 1;
               return (
-                <div
+               <div
                   key={service.id}
-                  className={`rounded-2xl p-6 flex flex-col justify-between border transition ${
+                  className={`group rounded-2xl p-6 flex flex-col justify-between border transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:shadow-black/40 ${
                     isFeatured
-                      ? 'bg-slate-900 border-emerald-500/50 shadow-lg shadow-emerald-950/30'
-                      : 'bg-slate-900/70 border-slate-800'
+                      ? 'bg-slate-900/95 border-emerald-500/50 shadow-lg shadow-emerald-950/30 hover:bg-slate-800/85 hover:border-emerald-400/70'
+                      : 'bg-slate-900/65 border-slate-800 hover:bg-slate-900 hover:border-slate-700'
                   }`}
                 >
                   <div className="space-y-4">
