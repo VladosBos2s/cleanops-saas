@@ -180,18 +180,12 @@ export default function PublicStorefrontPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#pricing"
-              className="hidden md:inline-block text-xs font-medium text-slate-300 hover:text-white transition"
-            >
+            <section id="pricing" className="scroll-mt-20 max-w-6xl mx-auto px-4 py-10 border-t border-slate-900">
               Pricing & Checklists
-            </a>
-            <a
-              href="#book-now"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-semibold transition"
-            >
+            </section>
+           <section id="book-now" className="scroll-mt-20 max-w-6xl mx-auto px-4 py-12 border-t border-slate-900">
               Instant Quote
-            </a>
+            </section>
             <Link
               href={portalHref}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-medium text-slate-200 transition"
