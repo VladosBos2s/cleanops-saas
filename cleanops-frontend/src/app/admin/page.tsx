@@ -78,7 +78,7 @@ export default function AdminWorkspacePage() {
     const stored = getStoredUser();
 
     if (!token || !stored) {
-      router.replace('/');
+      router.replace('/login');
       return;
     }
 
@@ -93,7 +93,7 @@ export default function AdminWorkspacePage() {
 
   function handleLogout() {
     clearSession();
-    router.replace('/');
+    router.replace('/login');
   }
 
   if (!user || loading) {

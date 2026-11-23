@@ -7,6 +7,7 @@ import catalogRoutes from './routes/catalog';
 import customerRoutes from './routes/customers';
 import staffRoutes from './routes/staff';
 import bookingRoutes from './routes/bookings';
+import publicRoutes from './routes/public';
 
 dotenv.config();
 
@@ -22,7 +23,10 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'CleanOps API' });
 });
 
-// Multi-Tenant API routes
+// Public storefront & self-service booking routes
+app.use('/public', publicRoutes);
+
+// Multi-Tenant authenticated API routes
 app.use('/auth', authRoutes);
 app.use('/catalog', catalogRoutes);
 app.use('/customers', customerRoutes);

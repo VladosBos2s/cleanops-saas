@@ -71,8 +71,8 @@ export async function apiRequest<T>(
 
   if (res.status === 401 && endpoint !== '/auth/login' && endpoint !== '/auth/setup-password') {
     clearSession();
-    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-      window.location.href = '/';
+    if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+      window.location.href = '/login';
     }
   }
 
