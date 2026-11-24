@@ -56,7 +56,7 @@ router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: R
     const organizationId = req.user!.organizationId;
 
     const existing = await prisma.customer.findFirst({
-      where: { id: req.params.id, organizationId },
+      where: { id: String(req.params.id), organizationId },
     });
 
     if (!existing) {

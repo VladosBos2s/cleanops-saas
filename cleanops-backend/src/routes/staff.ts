@@ -103,7 +103,7 @@ router.patch('/:id/status', authenticate, requireAdmin, async (req: AuthRequest,
     const organizationId = req.user!.organizationId;
 
     const member = await prisma.user.findFirst({
-      where: { id: req.params.id, organizationId },
+     where: { id: String(req.params.id), organizationId },
     });
 
     if (!member) {
@@ -133,7 +133,7 @@ router.delete('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: 
     const organizationId = req.user!.organizationId;
 
     const member = await prisma.user.findFirst({
-      where: { id: req.params.id, organizationId },
+      where: { id: String(req.params.id), organizationId },
     });
 
     if (!member) {

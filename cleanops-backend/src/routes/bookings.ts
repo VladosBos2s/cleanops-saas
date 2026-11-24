@@ -194,7 +194,7 @@ router.patch('/:id/assign', authenticate, requireAdmin, async (req: AuthRequest,
     const organizationId = req.user!.organizationId;
 
     const booking = await prisma.booking.findFirst({
-      where: { id: req.params.id, organizationId },
+      where: { id: String(req.params.id), organizationId },
     });
 
     if (!booking) {
@@ -257,7 +257,7 @@ router.patch('/:id/checklist/:itemId', authenticate, async (req: AuthRequest, re
     const { organizationId, role, userId } = req.user!;
 
     const booking = await prisma.booking.findFirst({
-      where: { id: req.params.id, organizationId },
+      where: { id: String(req.params.id), organizationId },
     });
 
     if (!booking) {
@@ -269,7 +269,7 @@ router.patch('/:id/checklist/:itemId', authenticate, async (req: AuthRequest, re
     }
 
     const updatedItem = await prisma.bookingChecklistItem.update({
-      where: { id: req.params.itemId },
+      where: { id: String(req.params.itemId) },
       data: { isCompleted: Boolean(isCompleted) },
     });
 
@@ -287,7 +287,7 @@ router.patch('/:id/status', authenticate, async (req: AuthRequest, res: Response
     const { organizationId, role, userId } = req.user!;
 
     const booking = await prisma.booking.findFirst({
-      where: { id: req.params.id, organizationId },
+      where: { id: String(req.params.id), organizationId },
       include: { checklist: true },
     });
 
